@@ -1,0 +1,24 @@
+# Artefactos de compilacion C
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.exe
+*.out
+
+# Debug symbols (macOS)
+*.dSYM/
+
+# Binarios sin extension (ejercicios C)
+parte2-c/ejercicio1-restaurante/restaurante
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
