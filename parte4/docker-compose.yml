@@ -1,0 +1,57 @@
+services:
+
+  runner-bash:
+    build: ./runner-bash
+    container_name: runner-bash
+    networks:
+      - red_interna
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  runner-c:
+    build: ./runner-c
+    container_name: runner-c
+    networks:
+      - red_interna
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+      - NET_BIND_SERVICE
+    security_opt:
+      - no-new-privileges:true
+
+  runner-ada:
+    build: ./runner-ada
+    container_name: runner-ada
+    networks:
+      - red_interna
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+      - NET_BIND_SERVICE
+    security_opt:
+      - no-new-privileges:true
+
+  manager:
+    build: ./manager
+    container_name: manager
+    ports:
+      - "8080:8080"
+    networks:
+      - red_interna
+    depends_on:
+      - runner-bash
+      - runner-c
+      - runner-ada
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  red_interna:
+    driver: bridge
