@@ -5,6 +5,10 @@ services:
     container_name: runner-bash
     networks:
       - red_interna
+    read_only: true
+    tmpfs:
+      - /run/sshd
+      - /tmp
     cap_drop:
       - ALL
     security_opt:
@@ -15,6 +19,10 @@ services:
     container_name: runner-c
     networks:
       - red_interna
+    read_only: true
+    tmpfs:
+      - /run/sshd
+      - /tmp
     cap_drop:
       - ALL
     cap_add:
@@ -29,6 +37,10 @@ services:
     container_name: runner-ada
     networks:
       - red_interna
+    read_only: true
+    tmpfs:
+      - /run/sshd
+      - /tmp
     cap_drop:
       - ALL
     cap_add:

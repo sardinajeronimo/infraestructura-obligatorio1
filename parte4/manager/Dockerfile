@@ -13,8 +13,10 @@ RUN chown -R manager:manager /home/manager/.ssh && \
     chmod 600 /home/manager/.ssh/id_ed25519
 
 COPY panel/ /var/www/panel/
+RUN chown -R manager:manager /var/www/panel
 COPY server.sh /home/manager/server.sh
 RUN chmod +x /home/manager/server.sh
 
 EXPOSE 8080
+USER manager
 CMD ["/bin/sh", "/home/manager/server.sh"]

@@ -19,7 +19,7 @@ RESULTADO=$(ssh -i /home/manager/.ssh/id_ed25519 \
     -o StrictHostKeyChecking=no \
     -o ConnectTimeout=2 \
     runner@$HOST \
-    "cpu=\$(top -bn1 | grep 'cpu ' | awk '{print \$2}')%; \
+    "cpu=\$(top -bn1 | grep '%Cpu' | awk '{print \$2}')%; \
      mem=\$(free -m 2>/dev/null | awk '/Mem/{printf \"%dMB/%dMB\", \$3, \$2}' 2>/dev/null || echo 'N/D'); \
      echo \"{\\\"cpu\\\":\\\"\$cpu\\\",\\\"mem\\\":\\\"\$mem\\\"}\"" 2>/dev/null)
 

@@ -19,5 +19,8 @@ RUN chown -R runner:runner /home/runner/.ssh && \
 COPY app/ /home/runner/app/
 RUN cd /home/runner/app && gnatmake juego.adb && chown runner:runner juego
 
+# Borramos gnat después de compilar (igual que se hace con gcc en runner-c)
+RUN apt-get purge -y gnat && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
+
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]

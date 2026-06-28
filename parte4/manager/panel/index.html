@@ -8,29 +8,36 @@
     h1 { color: #58a6ff; }
     .contenedor { background: #2d2d2d; border: 1px solid #444;
                   border-radius: 6px; padding: 1rem; margin: 1rem 0; }
+    .estado { font-weight: bold; margin-bottom: 0.5rem; }
+    .activo { color: #3fb950; }
+    .inactivo { color: #f85149; }
+    .metrica { color: #ccc; font-size: 0.9rem; }
     .cmd { background: #111; padding: 0.5rem; border-radius: 4px;
            color: #3fb950; font-size: 0.9rem; margin-top: 0.5rem; }
   </style>
 </head>
 <body>
   <h1>Panel de Control — Obligatorio Infraestructura</h1>
-  <p>Stack levantado con <code>docker compose up</code></p>
+  <p>Stack levantado con <code>docker compose up</code>. Actualiza cada 5 segundos.</p>
 
-  <div class="contenedor">
+  <div class="contenedor" id="card-runner-bash">
     <h2>runner-bash — Parte 1 (Bash)</h2>
-    <p>Contiene: paddock_manager_fixed.sh</p>
+    <div class="estado" id="estado-runner-bash">Consultando...</div>
+    <div class="metrica" id="metrica-runner-bash"></div>
     <div class="cmd">ssh -i ~/.ssh/id_ed25519 runner@runner-bash</div>
   </div>
 
-  <div class="contenedor">
+  <div class="contenedor" id="card-runner-c">
     <h2>runner-c — Parte 2 (C POSIX)</h2>
-    <p>Contiene: restaurante (Ejercicio 1)</p>
+    <div class="estado" id="estado-runner-c">Consultando...</div>
+    <div class="metrica" id="metrica-runner-c"></div>
     <div class="cmd">ssh -i ~/.ssh/id_ed25519 runner@runner-c</div>
   </div>
 
-  <div class="contenedor">
+  <div class="contenedor" id="card-runner-ada">
     <h2>runner-ada — Parte 3 (ADA)</h2>
-    <p>Contiene: main (Space Invaders)</p>
+    <div class="estado" id="estado-runner-ada">Consultando...</div>
+    <div class="metrica" id="metrica-runner-ada"></div>
     <div class="cmd">ssh -i ~/.ssh/id_ed25519 runner@runner-ada</div>
   </div>
 
@@ -38,5 +45,38 @@
   <p style="color:#666; font-size:0.8rem">
     Para conectarse: desde el manager, ejecutar los comandos de arriba.
   </p>
+
+  <script>
+    const runners = ["runner-bash", "runner-c", "runner-ada"];
+
+    function actualizar() {
+      runners.forEach(function(host) {
+        fetch("/cgi-bin/estado?host=" + host)
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            var estadoEl  = document.getElementById("estado-" + host);
+            var metricaEl = document.getElementById("metrica-" + host);
+            if (data && data.cpu !== undefined) {
+              estadoEl.textContent  = "ACTIVO";
+              estadoEl.className    = "estado activo";
+              metricaEl.textContent = "CPU: " + data.cpu + "  |  Memoria: " + data.mem;
+            } else {
+              estadoEl.textContent  = "INACTIVO";
+              estadoEl.className    = "estado inactivo";
+              metricaEl.textContent = "";
+            }
+          })
+          .catch(function() {
+            var estadoEl = document.getElementById("estado-" + host);
+            estadoEl.textContent = "INACTIVO";
+            estadoEl.className   = "estado inactivo";
+            document.getElementById("metrica-" + host).textContent = "";
+          });
+      });
+    }
+
+    actualizar();
+    setInterval(actualizar, 5000);
+  </script>
 </body>
 </html>
